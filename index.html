@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星际织梦 · 个人主页</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --text: #1a1a2e;
+            --text-light: #6c757d;
+            --primary: #6c63ff;
+            --primary-light: #8b83ff;
+            --border: #e9ecef;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --radius: 16px;
+            --transition: 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f0f1a;
+            --card-bg: #1a1a2e;
+            --text: #e4e4e7;
+            --text-light: #9ca3af;
+            --primary: #7c73ff;
+            --primary-light: #a59dff;
+            --border: #2d2d44;
+            --shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
+        a:hover { color: var(--primary-light); }
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            backdrop-filter: blur(20px);
+            background: rgba(255,255,255,0.7);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            transition: background var(--transition), border-color var(--transition);
+        }
+        [data-theme="dark"] .navbar { background: rgba(15,15,26,0.8); }
+        .navbar .container {
+            display: flex; justify-content: space-between; align-items: center; height: 64px;
+        }
+        .logo { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+        .nav-links { display: flex; gap: 28px; align-items: center; }
+        .nav-links a { color: var(--text-light); font-size: 0.9rem; font-weight: 500; transition: color var(--transition); }
+        .nav-links a:hover { color: var(--primary); }
+
+        .theme-toggle {
+            background: none; border: 2px solid var(--border); border-radius: 50%;
+            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1.1rem; color: var(--text);
+            transition: all var(--transition);
+        }
+        .theme-toggle:hover { border-color: var(--primary); }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 100px 20px 60px;
+        }
+        .hero-avatar {
+            width: 140px; height: 140px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 3.2rem; color: #fff;
+            box-shadow: 0 8px 32px rgba(108,99,255,0.3);
+        }
+        .hero h1 { font-size: 2.6rem; font-weight: 800; margin-bottom: 8px; }
+        .hero .subtitle {
+            font-size: 1.1rem; color: var(--text-light);
+            max-width: 500px; margin: 0 auto 20px;
+        }
+        .hero-tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
+        .hero-tags span {
+            padding: 6px 16px; border-radius: 20px;
+            background: var(--card-bg); border: 1px solid var(--border);
+            font-size: 0.85rem; color: var(--text-light);
+        }
+        .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 12px 28px; border-radius: 12px;
+            font-size: 0.95rem; font-weight: 600; cursor: pointer;
+            border: none; transition: all var(--transition);
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: var(--primary-light); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,99,255,0.3); }
+        .btn-outline { background: transparent; border: 2px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
+
+        .hero-socials {
+            display: flex; gap: 16px; justify-content: center; margin-top: 32px;
+        }
+        .hero-socials a {
+            width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--card-bg); border: 1px solid var(--border);
+            font-size: 1.2rem; color: var(--text-light);
+            transition: all var(--transition);
+        }
+        .hero-socials a:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-3px); }
+
+        section { padding: 80px 0; }
+        .section-title { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; }
+        .section-desc { text-align: center; color: var(--text-light); max-width: 500px; margin: 0 auto 48px; font-size: 0.95rem; }
+
+        /* 关于 */
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .about-card {
+            background: var(--card-bg); padding: 32px; border-radius: var(--radius);
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+        }
+        .about-card h3 { font-size: 1.1rem; margin-bottom: 12px; color: var(--primary); }
+        .about-card p { color: var(--text-light); font-size: 0.92rem; line-height: 1.8; }
+        .about-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 24px; }
+        .stat-item { text-align: center; padding: 20px; background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border); }
+        .stat-item .num { font-size: 1.6rem; font-weight: 800; color: var(--primary); }
+        .stat-item .label { font-size: 0.82rem; color: var(--text-light); margin-top: 4px; }
+
+        /* 技能 */
+        .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 20px; }
+        .skill-card {
+            background: var(--card-bg); padding: 24px; border-radius: var(--radius);
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+        }
+        .skill-card .skill-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .skill-card .skill-name { font-weight: 600; font-size: 0.92rem; }
+        .skill-card .skill-pct { color: var(--primary); font-weight: 600; font-size: 0.85rem; }
+        .skill-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+        .skill-bar-fill {
+            height: 100%; border-radius: 4px;
+            background: linear-gradient(90deg, var(--primary), #a855f7);
+            transition: width 1s ease;
+        }
+
+        /* 作品 */
+        .works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 24px; }
+        .work-card {
+            background: var(--card-bg); border-radius: var(--radius);
+            border: 1px solid var(--border); overflow: hidden;
+            box-shadow: var(--shadow); transition: all var(--transition);
+        }
+        .work-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+        .work-thumb {
+            height: 180px; background: linear-gradient(135deg, var(--primary), #a855f7);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: rgba(255,255,255,0.6);
+        }
+        .work-thumb.t2 { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+        .work-thumb.t3 { background: linear-gradient(135deg, #10b981, #06b6d4); }
+        .work-thumb.t4 { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+        .work-info { padding: 20px; }
+        .work-info h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+        .work-info p { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; }
+        .work-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .work-tags span {
+            padding: 3px 10px; border-radius: 6px;
+            background: var(--bg); font-size: 0.75rem; color: var(--text-light);
+        }
+
+        /* 联系 */
+        .contact-card {
+            max-width: 520px; margin: 0 auto;
+            background: var(--card-bg); padding: 40px; border-radius: var(--radius);
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+            text-align: center;
+        }
+        .contact-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .contact-card p { color: var(--text-light); font-size: 0.9rem; margin-bottom: 24px; }
+        .contact-item {
+            display: flex; align-items: center; gap: 12px;
+            justify-content: center; padding: 12px; margin-bottom: 8px;
+            border-radius: 12px; border: 1px solid var(--border);
+            transition: background var(--transition);
+        }
+        .contact-item:hover { background: var(--bg); }
+        .contact-item .icon { font-size: 1.2rem; color: var(--primary); }
+        .contact-item .label { font-size: 0.9rem; color: var(--text-light); }
+
+        footer {
+            text-align: center; padding: 32px 20px;
+            border-top: 1px solid var(--border);
+            color: var(--text-light); font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .hero-avatar { width: 100px; height: 100px; font-size: 2.4rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            .about-stats { grid-template-columns: repeat(3,1fr); }
+            .nav-links { display: none; }
+            .hero-btns { flex-direction: column; align-items: center; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <div class="logo">✦ Starweaver</div>
+        <div class="nav-links">
+            <a href="#about">关于</a>
+            <a href="#skills">技能</a>
+            <a href="#works">作品</a>
+            <a href="#contact">联系</a>
+            <button class="theme-toggle" id="themeToggle" aria-label="切换主题">🌙</button>
+        </div>
+    </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero" id="home">
+    <div>
+        <div class="hero-avatar">✦</div>
+        <h1>星际织梦</h1>
+        <p class="subtitle">在代码与铁轨之间穿行，用数字编织星辰大海</p>
+        <div class="hero-tags">
+            <span>💻 C++</span>
+            <span>🚛 ETS2 / TruckersMP</span>
+            <span>🚄 铁道爱好者</span>
+            <span>🤖 AI 探索者</span>
+            <span>🎮 Minecraft</span>
+        </div>
+        <div class="hero-btns">
+            <a href="#works" class="btn btn-primary">📂 查看作品</a>
+            <a href="#contact" class="btn btn-outline">✉️ 联系我</a>
+        </div>
+        <div class="hero-socials">
+            <a href="#" title="Steam">🎮</a>
+            <a href="#" title="Bilibili">📺</a>
+            <a href="#" title="GitHub">🐙</a>
+            <a href="#" title="邮箱">✉️</a>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 关于 ===== -->
+<section id="about">
+    <div class="container">
+        <h2 class="section-title">关于我</h2>
+        <p class="section-desc">一个热爱技术、铁道和游戏的年轻人</p>
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>📖 个人简介</h3>
+                <p>
+                    热爱用 C++ 处理各种数据，从高铁运行图到图像压缩都能搞定。
+                    是《欧洲卡车模拟2》的深度玩家，拥有 350+ 小时的驾驶经验，
+                    同时也是 TruckersMP 联机平台上的 VTC "漩涡舰长" 创始人。
+                    对铁路文化情有独钟，能准确识别各型动车组，实时查询列车交路数据。
+                    最近在探索 AI 大模型的应用，喜欢把各种工具串起来玩出花活。
+                </p>
+            </div>
+            <div class="about-card">
+                <h3>🎯 当前关注</h3>
+                <p>
+                    · C++ 数据分析和自动化脚本<br>
+                    · 铁路运行图查询与可视化<br>
+                    · ETS2 联机驾驶与 VTC 管理<br>
+                    · Minecraft 建筑与披风收集<br>
+                    · AI 大模型（LLM）应用探索<br>
+                    · 用镜头记录列车与风景
+                </p>
+            </div>
+        </div>
+        <div class="about-stats">
+            <div class="stat-item"><div class="num">355h</div><div class="label">ETS2 驾驶时间</div></div>
+            <div class="stat-item"><div class="num">50+</div><div class="label">脚本与项目</div></div>
+            <div class="stat-item"><div class="num">∞</div><div class="label">探索热情</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 技能 ===== -->
+<section id="skills" style="background: var(--card-bg);">
+    <div class="container">
+        <h2 class="section-title">技能</h2>
+        <p class="section-desc">持续学习，不断进化</p>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <div class="skill-header"><span class="skill-name">💻 C++</span><span class="skill-pct">85%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:85%;"></div></div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-header"><span class="skill-name">📊 数据处理 / 可视化</span><span class="skill-pct">80%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:80%;"></div></div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-header"><span class="skill-name">🌐 HTML / CSS / JS</span><span class="skill-pct">75%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:75%;"></div></div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-header"><span class="skill-name">🚆 铁路数据查询</span><span class="skill-pct">90%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:90%;"></div></div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-header"><span class="skill-name">🤖 AI / LLM 应用</span><span class="skill-pct">78%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:78%;"></div></div>
+            </div>
+            <div class="skill-card">
+                <div class="skill-header"><span class="skill-name">📷 摄影与后期</span><span class="skill-pct">70%</span></div>
+                <div class="skill-bar"><div class="skill-bar-fill" style="width:70%;"></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 作品 ===== -->
+<section id="works">
+    <div class="container">
+        <h2 class="section-title">作品</h2>
+        <p class="section-desc">一些有趣的项目成果</p>
+        <div class="works-grid">
+            <div class="work-card">
+                <div class="work-thumb t4">🏆</div>
+                <div class="work-info">
+                    <h3>蓝桥杯省三等奖</h3>
+                    <p>在蓝桥杯全国软件和信息技术专业人才大赛中获省级三等奖，展现了扎实的编程能力和算法功底。</p>
+                    <div class="work-tags"><span>算法</span><span>竞赛</span><span>编程</span></div>
+                </div>
+            </div>
+            <div class="work-card">
+                <div class="work-thumb t2">🚄</div>
+                <div class="work-info">
+                    <h3>跨徐州东列车运行图</h3>
+                    <p>查询并整理2026年一季度调图后跨徐州东枢纽的高速列车数据，按时间排序生成可视化表格，精度控制在±5分钟。</p>
+                    <div class="work-tags"><span>数据抓取</span><span>高铁</span><span>Excel</span></div>
+                </div>
+            </div>
+            <div class="work-card">
+                <div class="work-thumb t3">🚛</div>
+                <div class="work-info">
+                    <h3>漩涡舰长 VTC</h3>
+                    <p>在 TruckersMP 平台创立的虚拟货运公司，担任 Owner，管理6人团队，组织欧洲卡车模拟2联机驾驶活动。</p>
+                    <div class="work-tags"><span>ETS2</span><span>TMP</span><span>团队管理</span></div>
+                </div>
+            </div>
+            <div class="work-card">
+                <div class="work-thumb">✨</div>
+                <div class="work-info">
+                    <h3>原神 · 千星奇域官方合作高校奇匠</h3>
+                    <p>参与《原神》千星奇域活动，作为官方合作高校奇匠成员，在提瓦特大陆上展现创造力与热情。</p>
+                    <div class="work-tags"><span>原神</span><span>高校合作</span><span>千星奇域</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== 联系 ===== -->
+<section id="contact" style="background: var(--card-bg);">
+    <div class="container">
+        <h2 class="section-title">联系我</h2>
+        <p class="section-desc">欢迎交流技术、铁道、游戏等各种话题</p>
+        <div class="contact-card">
+            <h3>📬 保持联系</h3>
+            <p>有问题、想法或合作意向？随时找我聊！</p>
+            <div class="contact-item">
+                <span class="icon">🎮</span>
+                <span class="label">Steam: 星际织梦</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">📺</span>
+                <span class="label">Bilibili: @星际织梦</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">💬</span>
+                <span class="label">QQ: 1530882026</span>
+            </div>
+            <div class="contact-item">
+                <span class="icon">🐙</span>
+                <span class="label">TruckersMP: Starweaver (TMP ID: 6238479)</span>
+            </div>
+            <div style="margin-top:20px;">
+                <a href="mailto:" class="btn btn-primary">✉️ 发送邮件</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="container">
+        <p>© 2026 星际织梦 · Made with ❤️</p>
+    </div>
+</footer>
+
+<script>
+    const toggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        html.setAttribute('data-theme', savedTheme);
+        toggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    toggle.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        toggle.textContent = next === 'dark' ? '☀️' : '🌙';
+        localStorage.setItem('theme', next);
+    });
+</script>
+</body>
+</html>
