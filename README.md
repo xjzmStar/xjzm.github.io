@@ -52,4 +52,29 @@
 ## 版本历史
 
 - **v1.0** — 初始版本，4 个作品板块
-- **v2.0** — 作品板块扩充至 6 个，新增博客/机器人/课表项目
+- **v2.0** — 作品板块扩充至 6 个，新增博客/机器人/课表项目，添加 README 和制作过程档案
+- **v3.0** — 完整网站上传（主页 + 博客主题 starweaver + 背景图 bg.jpg），去除备案内容
+
+## 仓库结构
+
+```
+xjzm.github.io/
+├── index.html              # 主页（6 个作品展示）
+── bg.jpg                  # 网站背景图
+├── blog-theme/             # Typecho 博客主题（starweaver）
+│   ├── 404.php
+│   ├── comments.php
+│   ├── footer.php
+│   ├── functions.php
+│   ├── header.php
+│   ├── index.php
+│   ├── page.php
+│   ├── post.php
+│   ├── sidebar.php
+│   ├── style.css
+│   ├── logo.png
+│   └── images/
+│       └── gongan.jpg
+├── README.md               # 本文件（制作说明）
+└── 制作过程档案.md          # Prompt 日志（5 轮迭代记录）
+```
