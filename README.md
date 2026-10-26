@@ -9,7 +9,7 @@
 ### 导航栏
 - **Logo**： Starweaver 文字标识
 - **导航链接**：关于、技能、作品、联系
-- **主题切换按钮**：/☀️ 一键切换明暗主题，偏好自动保存到本地
+- **主题切换按钮**：🌙/☀️ 一键切换明暗主题，偏好自动保存到本地
 
 ### 各板块功能
 
@@ -53,28 +53,54 @@
 
 - **v1.0** — 初始版本，4 个作品板块
 - **v2.0** — 作品板块扩充至 6 个，新增博客/机器人/课表项目，添加 README 和制作过程档案
-- **v3.0** — 完整网站上传（主页 + 博客主题 starweaver + 背景图 bg.jpg），去除备案内容
+- **v3.0** — 完整网站上传（主页 + 博客主题 starweaver + 背景图），去除备案内容
 
 ## 仓库结构
 
 ```
 xjzm.github.io/
 ├── index.html              # 主页（6 个作品展示）
-── bg.jpg                  # 网站背景图
+── bg.jpg                  # 网站背景图（竖屏）
+├── bg-h.jpg                # 网站背景图（横屏）
+├── logo.png                # 头像
 ├── blog-theme/             # Typecho 博客主题（starweaver）
-│   ├── 404.php
-│   ├── comments.php
-│   ├── footer.php
-│   ├── functions.php
-│   ├── header.php
-│   ├── index.php
-│   ├── page.php
-│   ├── post.php
-│   ├── sidebar.php
-│   ├── style.css
-│   ├── logo.png
-│   └── images/
-│       └── gongan.jpg
+│   ├── 404.php             # 404 页面
+│   ├── comments.php        # 评论区模板
+│   ├── footer.php          # 页脚（无备案版）
+│   ├── functions.php       # 主题函数
+│   ├── header.php          # 页头
+│   ├── index.php           # 首页模板
+│   ├── page.php            # 独立页模板
+│   ├── post.php            # 文章页模板
+│   ├── sidebar.php         # 侧边栏
+│   ├── style.css           # 主题样式（毛玻璃风格）
+│   ├── logo.png            # 头像
+│   ── images/
+│       └── gongan.jpg      # 公安备案图标
 ├── README.md               # 本文件（制作说明）
-└── 制作过程档案.md          # Prompt 日志（5 轮迭代记录）
+── 制作过程档案.md          # Prompt 日志（迭代记录）
 ```
+
+## 博客主题说明
+
+`blog-theme/` 是 Typecho 博客的完整主题源码（starweaver 主题），包含：
+
+| 文件 | 功能 |
+|:---|:---|
+| `header.php` | 页头：导航栏、主题切换、CSS 引入 |
+| `footer.php` | 页脚：版权信息、备案（部署版有，GitHub 版无） |
+| `index.php` | 首页：文章列表 + 侧边栏 |
+| `post.php` | 文章页：正文 + 评论区 |
+| `page.php` | 独立页模板 |
+| `comments.php` | 评论区模板 |
+| `sidebar.php` | 侧边栏：最新文章/分类/标签/归档 |
+| `404.php` | 404 页面 |
+| `functions.php` | 主题设置（后台自定义选项） |
+| `style.css` | 主题样式（毛玻璃卡片 + 液态玻璃化视觉） |
+
+**主题特色**：
+- 毛玻璃卡片（glassmorphism）+ 暖橙色系主色
+- 背景图白色遮罩，毛玻璃仅应用于卡片不铺满主内容区
+- 与主页（index.html）视觉风格完全统一
+- 支持横竖屏背景图自动切换（`@media orientation`）
+- 页脚含 ICP 备案 + 公安备案号（部署版）
