@@ -1,0 +1,288 @@
+/*
+ * Starweaver Blog Theme - 从主页CSS搬过来
+ * 保留主页所有样式，删除 scroll-snap，加博客卡片样式
+ */
+@import url('https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #1a1a2e;
+    --text-light: #6c757d;
+    --primary: #6c63ff;
+    --primary-light: #8b83ff;
+    --border: #e9ecef;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    --radius: 16px;
+    --transition: 0.3s ease;
+    --glass-bg: rgba(255, 255, 255, 0.22);
+    --glass-bg-strong: rgba(255, 255, 255, 0.38);
+    --glass-border: rgba(255, 255, 255, 0.55);
+    --glass-blur: blur(16px) saturate(180%);
+    --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.14);
+    --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+html { scroll-behavior: auto; overflow-y: scroll; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: var(--text); line-height: 1.6;
+    background: #eef2fb;
+}
+
+/* 背景层 + 白色遮罩（同主页：改用 fixed 定位元素自绘背景，
+   避免 background-attachment: fixed 每帧重绘整屏导致的滚动卡顿） */
+.bg-overlay {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+        linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+        #eef2fb url('/bg.jpg?v=3') center center / cover no-repeat;
+}
+/* 背景图按屏幕方向自动切换（同主页）：横屏用横版图 bg-h.jpg，竖屏用竖版图 bg.jpg */
+@media (orientation: landscape) {
+    .bg-overlay {
+        background:
+            linear-gradient(rgba(255,255,255,0.2), rgba(255,255,255,0.2)),
+            #eef2fb url('/bg-h.jpg?v=1') center center / cover no-repeat;
+    }
+}
+.page, footer, .main-content { position: relative; z-index: 2; }
+a { color: var(--primary); text-decoration: none; transition: color var(--transition); }
+a:hover { color: var(--primary-light); }
+
+/* ===== 页面（从主页搬来，删掉 scroll-snap） ===== */
+.page {
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; padding: 80px 20px 40px;
+    position: relative; overflow: hidden;
+}
+/* 文章页/独立页面：内容可能超过一屏，不能 overflow:hidden 也不能垂直居中
+   用 .post-content / .page-content 是否存在来判断（比 body class 更可靠） */
+.page:has(.post-content), .page:has(.page-content) {
+    display: flex; flex-direction: column; align-items: center;
+    min-height: auto; overflow: visible; padding: 80px 20px 40px;
+}
+.page:has(.post-content) .page-inner, .page:has(.page-content) .page-inner {
+    width: 100%; max-width: 1000px;
+}
+.page-inner { max-width: 1000px; width: 100%; }
+
+/* ===== 导航栏（与主页逐字相同） ===== */
+.navbar { position: fixed; top: 0; left: 0; right: 0; -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); background: rgba(255,255,255,0.5); border-bottom: 1px solid var(--glass-border); box-shadow: 0 4px 24px rgba(31,38,135,0.07), var(--glass-highlight); z-index: 1000; }
+.navbar .container { display: flex; justify-content: space-between; align-items: center; height: 64px; max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+.logo { display: flex; align-items: center; gap: 8px; font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a { color: var(--text-light); font-size: 0.9rem; font-weight: 500; transition: color var(--transition); }
+.nav-links a:hover { color: var(--primary); }
+
+/* ===== Section 通用（与主页相同） ===== */
+.section-title { text-align: center; font-size: 1.8rem; font-weight: 700; margin-bottom: 12px; text-shadow: 0 1px 8px rgba(255,255,255,0.8); }
+.section-desc { text-align: center; color: var(--text); max-width: 500px; margin: 0 auto 48px; font-size: 0.95rem; font-weight: 500; text-shadow: 0 1px 6px rgba(255,255,255,0.9), 0 0 20px rgba(255,255,255,0.5); }
+
+/* ===== 入场动画（与主页相同） ===== */
+.fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+.fade-in-left { opacity: 0; transform: translateX(-50px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.fade-in-left.visible { opacity: 1; transform: translateX(0); }
+.fade-in-right { opacity: 0; transform: translateX(50px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+.fade-in-right.visible { opacity: 1; transform: translateX(0); }
+.fade-in-scale { opacity: 0; transform: scale(0.85); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+.fade-in-scale.visible { opacity: 1; transform: scale(1); }
+.delay-1 { transition-delay: 0.1s; } .delay-2 { transition-delay: 0.2s; } .delay-3 { transition-delay: 0.3s; } .delay-4 { transition-delay: 0.4s; } .delay-5 { transition-delay: 0.5s; }
+
+/* ===== 博客卡片（与主页 .about-card 同款毛玻璃） ===== */
+/* 侧边栏在左，正文在右 */
+.blog-grid { display: grid; grid-template-columns: 300px 1fr; gap: 32px; align-items: start; }
+
+.post-card {
+    background: var(--glass-bg); border-radius: var(--radius); padding: 28px;
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), var(--glass-highlight);
+    transition: all var(--transition);
+}
+.post-card + .post-card { margin-top: 24px; }
+.post-card:hover { transform: translateY(-4px); box-shadow: 0 14px 38px rgba(31,38,135,0.22); }
+.post-card h2 { font-size: 1.2rem; font-weight: 700; margin-bottom: 8px; }
+.post-card h2 a { color: var(--text); }
+.post-card h2 a:hover { color: var(--primary); }
+.post-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; font-size: 0.85rem; color: var(--text-light); }
+.post-excerpt { color: var(--text-light); font-size: 0.92rem; line-height: 1.8; margin-bottom: 16px; }
+.read-more { display: inline-block; padding: 6px 16px; border-radius: 8px; background: var(--primary); color: #fff; font-size: 0.85rem; font-weight: 500; transition: background var(--transition); }
+.read-more:hover { background: var(--primary-light); color: #fff; }
+
+/* 防御：任何图片都不许撑破布局（logo.png 原图 711×711） */
+img { max-width: 100%; height: auto; }
+
+/* ===== 文章页 ===== */
+.post-content { background: var(--glass-bg); border-radius: var(--radius); padding: 40px; -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), var(--glass-highlight); }
+.post-content h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; }
+.post-content .post-meta { margin-bottom: 24px; }
+.post-content .post-body { font-size: 0.95rem; line-height: 1.9; color: var(--text); }
+.post-content .post-body h2 { font-size: 1.3rem; font-weight: 600; margin: 32px 0 12px; color: var(--primary); }
+.post-content .post-body h3 { font-size: 1.1rem; font-weight: 600; margin: 24px 0 8px; }
+.post-content .post-body p { margin-bottom: 16px; }
+.post-content .post-body blockquote { border-left: 3px solid var(--primary); padding: 12px 20px; margin: 16px 0; background: rgba(255,255,255,0.15); border-radius: 0 8px 8px 0; }
+.post-content .post-body code { background: rgba(108,99,255,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.88rem; }
+.post-content .post-body pre { background: transparent; padding: 0; border-radius: 0; overflow-x: auto; margin: 16px 0; white-space: pre-wrap; word-wrap: break-word; }
+.post-content .post-body pre code { background: none; padding: 0; }
+.post-nav { display: flex; justify-content: space-between; margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--glass-border); }
+.post-nav a { padding: 8px 16px; border-radius: 8px; background: var(--glass-bg); border: 1px solid var(--glass-border); font-size: 0.88rem; }
+
+/* ===== 页面（如"关于"单页） ===== */
+.page-content { background: var(--glass-bg); border-radius: var(--radius); padding: 40px; -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), var(--glass-highlight); }
+
+/* ===== 评论区 ===== */
+.comments-area { background: var(--glass-bg); border-radius: var(--radius); padding: 32px; margin-top: 40px; -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur); border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow), var(--glass-highlight); }
+.comments-area h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+.comment-list { list-style: none; }
+.comment-list li { padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.3); }
+.comment-list .comment-author { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; }
+.comment-list .comment-time { font-size: 0.78rem; color: var(--text-light); margin-bottom: 8px; }
+.comment-list .comment-body { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+.comment-respond { margin-top: 24px; }
+.comment-respond textarea, .comment-respond input[type="text"], .comment-respond input[type="email"], .comment-respond input[type="url"] {
+    width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px;
+    background: rgba(255,255,255,0.28); font-size: 0.9rem; margin-bottom: 12px;
+    font-family: inherit; color: var(--text);
+}
+.comment-respond textarea { min-height: 100px; resize: vertical; }
+.comment-respond button {
+    padding: 10px 24px; border: none; border-radius: 8px;
+    background: var(--primary); color: #fff; font-weight: 600; cursor: pointer; font-size: 0.9rem;
+}
+.comment-respond button:hover { background: var(--primary-light); }
+
+/* ===== 404 ===== */
+.page-404 { text-align: center; }
+.page-404 h1 { font-size: 5rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+.page-404 p { font-size: 1.1rem; color: var(--text-light); margin-bottom: 24px; }
+.page-404 .btn { display: inline-block; padding: 12px 28px; border-radius: 12px; background: var(--primary); color: #fff; font-weight: 600; transition: background var(--transition); }
+.page-404 .btn:hover { background: var(--primary-light); color: #fff; }
+
+/* ===== Footer（与主页相同） ===== */
+/* 版权 + 备案号两行改纯黑：背景换成照片后浅灰字压在图上会糊，看不清 */
+footer { text-align: center; padding: 32px 20px; border-top: 1px solid var(--glass-border); color: #000; font-size: 0.85rem; position: relative; z-index: 2; }
+.footer-icp { margin-top: 8px; font-size: 0.78rem; color: #000; }
+.footer-icp a { color: #000; }
+.footer-icp a:hover { color: var(--primary); }
+
+/* ===== 侧边栏（与主页 .about-card 同款毛玻璃，位于左侧） ===== */
+.sidebar .widget {
+    background: var(--glass-bg); border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), var(--glass-highlight);
+}
+.sidebar .widget:last-child { margin-bottom: 0; }
+.sidebar .widget h3 { font-size: 1rem; font-weight: 600; margin-bottom: 12px; color: var(--primary); }
+.sidebar .widget ul { list-style: none; }
+.sidebar .widget li { padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.3); font-size: 0.88rem; }
+.sidebar .widget li:last-child { border-bottom: none; }
+.sidebar .widget li a { color: var(--text-light); }
+.sidebar .widget li a:hover { color: var(--primary); }
+.sidebar .widget .center { text-align: center; }
+.sidebar .widget .muted { text-align: center; font-size: 0.85rem; color: var(--text-light); }
+.sidebar .widget h3.center { text-align: center; margin-bottom: 6px; }
+.sidebar .widget .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.sidebar .widget .tag-cloud a {
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(255,255,255,0.35); font-size: 0.78rem; color: var(--text);
+    border: 1px solid var(--glass-border);
+    transition: all var(--transition);
+}
+.sidebar .widget .tag-cloud a:hover { background: rgba(255,255,255,0.6); color: var(--primary); transform: translateY(-2px); }
+
+/* ===== 文章标签 ===== */
+.post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 24px; }
+.post-tags a {
+    padding: 4px 12px; border-radius: 6px;
+    background: rgba(255,255,255,0.35); font-size: 0.78rem; color: var(--text);
+    border: 1px solid var(--glass-border);
+}
+.post-tags a:hover { background: rgba(255,255,255,0.6); color: var(--primary); }
+
+/* ===== 分页（pageNav） ===== */
+.page-nav, .comment-page-nav { margin-top: 24px; text-align: center; }
+.page-nav ol, .comment-page-nav ol { list-style: none; display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.page-nav li, .comment-page-nav li { display: inline-block; }
+.page-nav a, .comment-page-nav a,
+.page-nav span, .comment-page-nav span {
+    display: inline-block; padding: 8px 16px; border-radius: 8px;
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    font-size: 0.85rem; color: var(--text);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+}
+.page-nav a:hover, .comment-page-nav a:hover { background: var(--glass-bg-strong); color: var(--primary); }
+
+/* ===== Typecho 原生评论标记 ===== */
+.comments-area ol.comment-list { list-style: none; padding: 0; margin: 0; }
+.comments-area .comment-body {
+    padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.3);
+}
+.comments-area .comment-body:last-child { border-bottom: none; }
+.comments-area .comment-author { font-weight: 600; font-size: 0.9rem; margin-bottom: 4px; color: var(--text); }
+.comments-area .comment-author img { vertical-align: middle; margin-right: 6px; border-radius: 50%; }
+.comments-area .comment-meta { font-size: 0.78rem; color: var(--text-light); margin-bottom: 8px; }
+.comments-area .comment-meta a { color: var(--text-light); }
+.comments-area .comment-content { font-size: 0.9rem; color: var(--text-light); line-height: 1.7; }
+.comments-area .comment-reply { margin-top: 8px; font-size: 0.8rem; }
+.comments-area .comment-children { margin-left: 28px; padding-left: 16px; border-left: 2px solid rgba(255,255,255,0.4); margin-top: 12px; }
+.comments-area .comment-awaiting-moderation { font-style: normal; color: #f59e0b; font-size: 0.8rem; }
+.comments-area .cancel-comment-reply { margin-bottom: 12px; font-size: 0.85rem; }
+.comments-area .muted { font-size: 0.85rem; color: var(--text-light); margin-bottom: 12px; }
+
+/* ===== 通用按钮（404 用） ===== */
+.btn {
+    display: inline-block; padding: 12px 28px; border-radius: 12px;
+    background: var(--primary); color: #fff; font-weight: 600; font-size: 0.95rem;
+    border: none; cursor: pointer; transition: all var(--transition);
+}
+.btn:hover { background: var(--primary-light); color: #fff; transform: translateY(-2px); }
+
+/* ===== 竖版专用排版（手机 / 窄屏，与主页同一套思路）=====
+   横屏是「侧边栏 300px + 正文」的两栏排版，压到手机上很牵强：
+   · 导航整条被 display:none，手机上回不去主页
+   · 侧边栏 5 张卡片全堆在文章前面，得先划过一整屏才看到第一篇
+   · 卡片/标题还给的是宽屏字号
+   竖版这里单独重排：导航保留、个人卡留顶部、其余小卡挪到文章列表之后、
+   所有卡片单列并收紧间距。 */
+@media (max-width: 768px) {
+    /* --- 导航：保留「← 回到主页」 --- */
+    .navbar .container { height: 56px; padding: 0 14px; }
+    .logo { font-size: 0.95rem; gap: 6px; }
+    .nav-links { display: flex; }
+    .nav-links a { font-size: 0.78rem; }
+
+    .page { padding: 70px 16px 30px; }
+    .page:has(.post-content), .page:has(.page-content) {
+        padding: 70px 16px 30px;
+    }
+    .section-title { font-size: 1.45rem; }
+    .section-desc { font-size: 0.86rem; margin-bottom: 26px; }
+
+    /* --- 竖版重排：个人卡在顶部，正文紧跟其后，分类/标签/归档挪到最下面 --- */
+    /* align-items: stretch —— .blog-grid 原来是 start，改 flex 后卡片会缩成内容宽 */
+    .blog-grid { display: flex; flex-direction: column; gap: 18px; align-items: stretch; }
+    .sidebar { display: contents; }
+    .sidebar .widget { margin-bottom: 0; padding: 18px 20px; }
+    .sidebar .widget h3 { font-size: 0.95rem; margin-bottom: 10px; }
+    .sidebar .widget li { font-size: 0.86rem; padding: 7px 0; }
+    .sidebar .widget:first-child { order: -1; }
+    .post-list { order: 0; }
+    .sidebar .widget:not(:first-child) { order: 1; }
+
+    /* --- 文章与卡片 --- */
+    .post-card { padding: 22px 20px; }
+    .post-card h2 { font-size: 1.06rem; }
+    .post-meta { gap: 10px; font-size: 0.78rem; }
+    .post-excerpt { font-size: 0.88rem; }
+    .post-content { padding: 24px 20px; }
+    .post-content h1 { font-size: 1.4rem; }
+    .post-content .post-body { font-size: 0.92rem; }
+    .post-content .post-body pre { background: transparent; padding: 0; }
+    .comments-area { padding: 22px 18px; }
+    footer { padding: 24px 16px; font-size: 0.8rem; }
+}
